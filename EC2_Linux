@@ -1,0 +1,63 @@
+EC2
+
+
+sudo yum update -y
+
+df -h
+free -h
+wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+bash Miniconda3-latest-Linux-x86_64.sh
+~/miniconda3/bin/conda init
+source ~/.bashrc
+
+
+
+Docker
+
+sudo dnf update -y
+sudo dnf install docker -y
+
+sudo systemctl start docker
+sudo systemctl enable docker
+
+
+OLLAMA SETUP
+curl -fsSL https://ollama.com/install.sh | sh
+ollama --help
+ollama pull phi3
+
+
+
+docker ps -a
+docker stop ollama
+docker rm ollama
+
+
+
+docker run -d -v ollama:/root/.ollama -p 11434:11434 --name ollama ollama/ollama
+https://ollama.com/blog/ollama-is-now-available-as-an-official-docker-image
+
+
+Docker User Issue 
+sudo usermod -aG docker $USER
+newgrp docker
+ls -l /var/run/docker.sock
+sudo systemctl restart docker
+sudo systemctl status docker
+
+curl -fsSL https://ollama.com/install.sh | sh
+
+#docker run -d -v ollama:/root/.ollama -p 80:80 --name ollama7 ollama/ollama
+docker run -d -e OLLAMA_HOST=0.0.0.0:80 -p 80:80 --name ollama7 ollama/ollama
+
+docker exec -it ollama7 ollama run llama2
+
+
+Final Sequence
+
+curl -fsSL https://ollama.com/install.sh | sh
+ollama pull phi3
+docker run -d -e OLLAMA_HOST=0.0.0.0:80 -p 80:80 --name ollama7 ollama/ollama
+docker exec -it ollama7 ollama run phi3
+docker logs ollama7
+

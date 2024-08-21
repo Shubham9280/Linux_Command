@@ -1,0 +1,57 @@
+docker build -t vllm_deployement .
+
+docker image ls
+docker ps -a
+
+
+#delet all the container
+
+docker stop $(docker ps -q)
+docker rm $(docker ps -a -q)
+
+#delet Docker images
+docker images
+docker rmi
+
+#Build Image
+docker build -t vllm_deployement .
+
+#Deploye Image as Container
+docker run -d -p 8080:8080 --name vllm-deployement-container vllm_deployement
+
+
+
+docker build -f Dockerfile.cpu -t vllm-cpu-env --shm-size=4g .
+
+docker run -it --rm --network=host --cpuset-cpus=0,1 --cpuset-mems=0 --env="HUGGING_FACE_HUB_TOKEN= " vllm-cpu-env
+
+
+docker run -it  \         
+--rm  \            
+--network=host  \           
+--cpuset-cpus=0,1   \           
+--cpuset-mems=0 \
+--env "HUGGING_FACE_HUB_TOKEN= "  \          
+vllm-cpu-env\
+
+
+
+
+
+docker run \
+    -v ~/.cache/huggingface:/root/.cache/huggingface \
+    --env "HUGGING_FACE_HUB_TOKEN= " \
+    --env "VLLM_USE_CPU_ONLY=1" \
+    -p 8000:8000 \
+    --ipc=host \
+    vllm-cpu \
+    --model meta-llama/Meta-Llama-3-8B
+
+
+docker run \
+    -v ~/.cache/huggingface:/root/.cache/huggingface \
+    --env "HUGGING_FACE_HUB_TOKEN=<secret>" \
+    -p 8000:8000 \
+    --ipc=host \
+    vllm-cpu \
+    --model meta-llama/Meta-Llama-3-8B
